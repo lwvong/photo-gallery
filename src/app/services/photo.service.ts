@@ -18,6 +18,26 @@ export class PhotoService {
     this.platform = platform;
   }
 
+  public async deletePicture(photo: Photo, position: number) {
+    // Remove this photo from the Photos reference data array
+    this.photos.splice(position, 1);
+  
+    // Update photos array cache by overwriting the existing photo array
+    Storage.set({
+      key: this.PHOTO_STORAGE,
+      value: JSON.stringify(this.photos)
+    });
+  
+    // delete photo file from filesystem
+    const filename = photo.filepath
+                        .substr(photo.filepath.lastIndexOf('/') + 1);
+  
+    await Filesystem.deleteFile({
+      path: filename,
+      directory: FilesystemDirectory.Data
+    });
+  }
+
   // Open device camera and add image captured to begininng of photos array
   public async addNewToGallery() {
     // Take a photo
