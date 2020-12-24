@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Plugins, CameraResultType, Capacitor, FilesystemDirectory, 
   CameraPhoto, CameraSource } from '@capacitor/core';
+import { Platform } from '@ionic/angular';
 
 const { Camera, Filesystem, Storage } = Plugins;
 
@@ -11,8 +12,11 @@ export class PhotoService {
 
   public photos: Photo[] = []; // array of references to all photos captured
   private PHOTO_STORAGE: string = "photos"; // key for the key-value store
+  private platform: Platform;
 
-  constructor() { }
+  constructor(platform: Platform) { 
+    this.platform = platform;
+  }
 
   // Open device camera and add image captured to begininng of photos array
   public async addNewToGallery() {
