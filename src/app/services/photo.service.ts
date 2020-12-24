@@ -10,6 +10,7 @@ const { Camera, Filesystem, Storage } = Plugins;
 export class PhotoService {
 
   public photos: Photo[] = []; // array of references to all photos captured
+  private PHOTO_STORAGE: string = "photos"; // key for the key-value store
 
   constructor() { }
 
@@ -25,6 +26,12 @@ export class PhotoService {
     // Save and add newly captured photo to beginning of photos array
     const savedImageFile = await this.savePicture(capturedPhoto);
     this.photos.unshift(savedImageFile);
+
+    // (Re)Save (PHOTO_STORAGE "key", photos array "value") into Storage
+    Storage.set({
+      key: this.PHOTO_STORAGE,
+      value: JSON.stringify(this.photos)
+    })
   }
 
   // Save specified cameraPhoto
